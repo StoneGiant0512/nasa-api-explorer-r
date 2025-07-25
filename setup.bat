@@ -26,7 +26,7 @@ if not exist .env (
     (
         echo PORT=5000
         echo NODE_ENV=development
-        echo NASA_API_KEY=DEMO_KEY
+        echo NASA_API_KEY=bHPsKvR5LHFS7WZqkoZmDu5hhCtlth3MBhuUhJVx
         echo NASA_API_BASE_URL=https://api.nasa.gov
         echo CORS_ORIGIN=http://localhost:3000
         echo RATE_LIMIT_WINDOW_MS=900000

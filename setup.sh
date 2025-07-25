@@ -24,7 +24,7 @@ if [ ! -f .env ]; then
     cat > .env << EOF
 PORT=5000
 NODE_ENV=development
-NASA_API_KEY=DEMO_KEY
+NASA_API_KEY=bHPsKvR5LHFS7WZqkoZmDu5hhCtlth3MBhuUhJVx
 NASA_API_BASE_URL=https://api.nasa.gov
 CORS_ORIGIN=http://localhost:3000
 RATE_LIMIT_WINDOW_MS=900000

@@ -52,9 +52,9 @@ export class NASAService {
    */
   async getAPOD(params?: APODRequest): Promise<APODResponse | APODResponse[]> {
     try {
-      console.log("[params]", params)
+      console.log("params", params)
       const response: AxiosResponse<APODResponse | APODResponse[]> = await this.api.get('/planetary/apod', {
-        params,
+        params
       });
       return response.data;
     } catch (error) {

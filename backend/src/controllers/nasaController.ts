@@ -7,7 +7,6 @@ export class NASAController {
    * Get Astronomy Picture of the Day
    */
   static getAPOD: AsyncRequestHandler = async (req: Request, res: Response) => {
-    console.log("this is [getAPOD]")
     if (process.env.NODE_ENV === 'development') {
       console.log("APOD request params:", req.query)
     }
