@@ -10,7 +10,7 @@ services:
         value: production
       - key: PORT
         value: 10000
-      - key: fn26y6c3iJUKPyilf8099ggmpCZQldWP8xTscwhw
+      - key: NASA_API_KEY
         sync: false
       - key: CORS_ORIGIN
         sync: false
