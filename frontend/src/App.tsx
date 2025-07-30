@@ -1,3 +1,4 @@
+import React from 'react'
 import { Routes, Route } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import Header from './components/Header'
@@ -10,6 +11,80 @@ import NEO from './pages/NEO'
 import ImageSearch from './pages/ImageSearch'
 import NotFound from './pages/NotFound'
 
+// Animation variants for different page types
+const pageAnimations = {
+  home: {
+    initial: { opacity: 0 },
+    animate: { opacity: 1 },
+    transition: { duration: 0.5 }
+  },
+  page: {
+    initial: { opacity: 0, y: 20 },
+    animate: { opacity: 1, y: 0 },
+    transition: { duration: 0.5 }
+  },
+  error: {
+    initial: { opacity: 0, scale: 0.9 },
+    animate: { opacity: 1, scale: 1 },
+    transition: { duration: 0.5 }
+  }
+}
+
+// Route configuration
+const routes: Array<{
+  path: string
+  element: React.ComponentType
+  animation: keyof typeof pageAnimations
+}> = [
+  {
+    path: '/',
+    element: Home,
+    animation: 'home'
+  },
+  {
+    path: '/apod',
+    element: APOD,
+    animation: 'page'
+  },
+  {
+    path: '/mars-rovers',
+    element: MarsRovers,
+    animation: 'page'
+  },
+  {
+    path: '/epic',
+    element: EPIC,
+    animation: 'page'
+  },
+  {
+    path: '/neo',
+    element: NEO,
+    animation: 'page'
+  },
+  {
+    path: '/images',
+    element: ImageSearch,
+    animation: 'page'
+  }
+]
+
+// Animated route wrapper component
+const AnimatedRoute = ({ 
+  children, 
+  animation = 'page' 
+}: { 
+  children: React.ReactNode
+  animation?: keyof typeof pageAnimations 
+}) => (
+  <motion.div
+    initial={pageAnimations[animation].initial}
+    animate={pageAnimations[animation].animate}
+    transition={pageAnimations[animation].transition}
+  >
+    {children}
+  </motion.div>
+)
+
 function App() {
   return (
     <div className="min-h-screen flex flex-col">
@@ -17,89 +92,27 @@ function App() {
       
       <main className="flex-1">
         <Routes>
-          <Route 
-            path="/" 
+          {/* Main routes */}
+          {routes.map(({ path, element: Element, animation }) => (
+            <Route
+              key={path}
+              path={path}
+              element={
+                <AnimatedRoute animation={animation}>
+                  <Element />
+                </AnimatedRoute>
+              }
+            />
+          ))}
+          
+          {/* 404 route */}
+          <Route
+            path="*"
             element={
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.5 }}
-              >
-                <Home />
-              </motion.div>
-            } 
-          />
-          <Route 
-            path="/apod" 
-            element={
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-              >
-                <APOD />
-              </motion.div>
-            } 
-          />
-          <Route 
-            path="/mars-rovers" 
-            element={
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-              >
-                <MarsRovers />
-              </motion.div>
-            } 
-          />
-          <Route 
-            path="/epic" 
-            element={
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-              >
-                <EPIC />
-              </motion.div>
-            } 
-          />
-          <Route 
-            path="/neo" 
-            element={
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-              >
-                <NEO />
-              </motion.div>
-            } 
-          />
-          <Route 
-            path="/images" 
-            element={
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-              >
-                <ImageSearch />
-              </motion.div>
-            } 
-          />
-          <Route 
-            path="*" 
-            element={
-              <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.5 }}
-              >
+              <AnimatedRoute animation="error">
                 <NotFound />
-              </motion.div>
-            } 
+              </AnimatedRoute>
+            }
           />
         </Routes>
       </main>

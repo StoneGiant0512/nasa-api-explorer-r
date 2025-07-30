@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { motion } from 'framer-motion'
 import { FaGlobe, FaCalendar, FaExternalLinkAlt } from 'react-icons/fa'
-import { apiService } from '../services/api'
+import { epicService } from '../services/epicService'
 import { EPICResponse } from '../types/nasa'
 import LoadingSpinner from '../components/LoadingSpinner'
 import ErrorMessage from '../components/ErrorMessage'
@@ -12,25 +12,16 @@ const EPIC = () => {
 
   const { data: epicData, isLoading, error, refetch } = useQuery({
     queryKey: ['epic', selectedDate],
-    queryFn: () => apiService.getEPICData(selectedDate),
+    queryFn: () => epicService.getEPICByDate(selectedDate),
     staleTime: 1000 * 60 * 60, // 1 hour
   })
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    })
+    return epicService.getFormattedDate(dateString)
   }
 
   const formatTime = (dateString: string) => {
-    return new Date(dateString).toLocaleTimeString('en-US', {
-      hour: '2-digit',
-      minute: '2-digit',
-      timeZoneName: 'short'
-    })
+    return epicService.getFormattedTime(dateString)
   }
 
   if (isLoading) {

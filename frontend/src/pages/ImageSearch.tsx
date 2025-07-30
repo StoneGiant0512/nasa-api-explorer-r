@@ -11,11 +11,10 @@ import {
   FaVideo,
   FaMusic,
   FaDownload,
-  FaExternalLinkAlt,
   FaStar,
   FaEye
 } from 'react-icons/fa';
-import { apiService } from '../services/api';
+import { imageSearchService } from '../services/imageSearchService';
 import LoadingSpinner from '../components/LoadingSpinner';
 import ErrorMessage from '../components/ErrorMessage';
 
@@ -48,7 +47,7 @@ const ImageSearch: React.FC = () => {
     refetch,
   } = useQuery({
     queryKey: ['nasa-images', searchFilters],
-    queryFn: () => apiService.searchNASAImages(searchFilters),
+    queryFn: () => imageSearchService.searchNASAImages(searchFilters),
     enabled: searchFilters.q.length > 0,
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
@@ -90,11 +89,7 @@ const ImageSearch: React.FC = () => {
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    });
+    return imageSearchService.getFormattedDate(dateString);
   };
 
   return (
@@ -318,7 +313,7 @@ const ImageSearch: React.FC = () => {
                           <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                             <div className="flex gap-2">
                               <a
-                                href={item.links.find(link => link.render === 'image')?.href}
+                                href={item.links.find((link: any) => link.render === 'image')?.href}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="p-2 bg-white/20 rounded-lg hover:bg-white/30 transition-colors duration-300"
@@ -327,7 +322,7 @@ const ImageSearch: React.FC = () => {
                                 <FaEye className="w-5 h-5 text-white" />
                               </a>
                               <a
-                                href={item.links.find(link => link.rel === 'preview')?.href}
+                                href={item.links.find((link: any) => link.rel === 'preview')?.href}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="p-2 bg-white/20 rounded-lg hover:bg-white/30 transition-colors duration-300"
@@ -382,7 +377,7 @@ const ImageSearch: React.FC = () => {
                           {/* Keywords */}
                           {item.data[0]?.keywords && item.data[0].keywords.length > 0 && (
                             <div className="mt-3 flex flex-wrap gap-1">
-                              {item.data[0].keywords.slice(0, 3).map((keyword, idx) => (
+                              {item.data[0].keywords.slice(0, 3).map((keyword: string, idx: number) => (
                                 <span
                                   key={idx}
                                   className="px-2 py-1 bg-purple-600/20 text-purple-300 text-xs rounded-full"

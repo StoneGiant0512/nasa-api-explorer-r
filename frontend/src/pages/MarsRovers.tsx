@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { motion } from 'framer-motion'
 import { FaRocket, FaCalendar, FaCamera, FaExternalLinkAlt } from 'react-icons/fa'
-import { apiService } from '../services/api'
+import { marsRoverService } from '../services/marsRoverService'
 import { MarsRoverPhoto } from '../types/nasa'
 import LoadingSpinner from '../components/LoadingSpinner'
 import ErrorMessage from '../components/ErrorMessage'
@@ -70,7 +70,7 @@ const MarsRovers = () => {
 
   const { data: photosData, isLoading, error, refetch } = useQuery({
     queryKey: ['mars-rover', selectedRover, selectedDate, selectedCamera],
-    queryFn: () => apiService.getMarsRoverPhotos(selectedRover, { earth_date: selectedDate, camera: selectedCamera }),
+    queryFn: () => marsRoverService.getPhotosByEarthDate(selectedRover, selectedDate, selectedCamera === 'all' ? undefined : selectedCamera),
     staleTime: 1000 * 60 * 30, // 30 minutes
   })
 
@@ -78,11 +78,7 @@ const MarsRovers = () => {
   const photos = photosData?.photos || []
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    })
+    return marsRoverService.formatDate(dateString)
   }
 
   if (isLoading) {

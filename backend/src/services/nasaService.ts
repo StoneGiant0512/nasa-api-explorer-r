@@ -1,4 +1,5 @@
 import axios, { AxiosInstance, AxiosResponse } from 'axios';
+import { config } from '../config/environment';
 import {
   APODResponse,
   MarsRoverResponse,
@@ -17,8 +18,8 @@ export class NASAService {
   private baseURL: string;
 
   constructor() {
-    this.apiKey = process.env.NASA_API_KEY || 'DEMO_KEY';
-    this.baseURL = process.env.NASA_API_BASE_URL || 'https://api.nasa.gov';
+    this.apiKey = config.NASA_API_KEY;
+    this.baseURL = config.NASA_API_BASE_URL;
     
     this.api = axios.create({
       baseURL: this.baseURL,

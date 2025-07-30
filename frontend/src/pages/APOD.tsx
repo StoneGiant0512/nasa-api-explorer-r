@@ -2,19 +2,24 @@ import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { motion } from 'framer-motion'
 import { FaCalendar, FaExternalLinkAlt, FaPlay, FaPause } from 'react-icons/fa'
-import { apiService } from '../services/api'
+import { apodService } from '../services/apodService'
 import { APODResponse } from '../types/nasa'
 
 import LoadingSpinner from '../components/LoadingSpinner'
 import ErrorMessage from '../components/ErrorMessage'
 
 const APOD = () => {
-  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0])
+  const [selectedDate, setSelectedDate] = useState(() => {
+    // Use yesterday's date instead of today to ensure data is available
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    return yesterday.toISOString().split('T')[0];
+  })
   const [isPlaying, setIsPlaying] = useState(false)
 
   const { data: apodData, isLoading, error, refetch } = useQuery({
     queryKey: ['apod', selectedDate],
-    queryFn: () => apiService.getAPOD(selectedDate ? { date: selectedDate } : undefined),
+    queryFn: () => apodService.getAPODByDate(selectedDate),
     staleTime: 1000 * 60 * 60, // 1 hour
   })
   
@@ -26,20 +31,11 @@ const APOD = () => {
   }
 
   const handleRandomDate = () => {
-    const startDate = new Date('1995-06-16') // APOD started on this date
-    const endDate = new Date()
-    const randomTime = startDate.getTime() + Math.random() * (endDate.getTime() - startDate.getTime())
-    const randomDate = new Date(randomTime)
-    setSelectedDate(randomDate.toISOString().split('T')[0])
+    setSelectedDate(apodService.getRandomDate())
   }
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    })
+    return apodService.getFormattedDate(dateString)
   }
 
   if (isLoading) {

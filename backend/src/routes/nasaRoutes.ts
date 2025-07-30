@@ -1,24 +1,19 @@
 import { Router } from 'express';
-import { NASAController } from '../controllers/nasaController';
+import { 
+  apodRoutes, 
+  marsRoverRoutes, 
+  epicRoutes, 
+  neoRoutes, 
+  imageSearchRoutes 
+} from './index';
 
 const router = Router();
 
-// APOD (Astronomy Picture of the Day) routes
-router.get('/apod', NASAController.getAPOD);
-
-// Mars Rover routes
-router.get('/mars-rovers', NASAController.getMarsRovers);
-router.get('/mars-rovers/:rover/photos', NASAController.getMarsRoverPhotos);
-router.get('/mars-rovers/:rover/manifest', NASAController.getMarsRoverManifest);
-
-// EPIC (Earth Polychromatic Imaging Camera) routes
-router.get('/epic', NASAController.getEPICData);
-router.get('/epic/image-url', NASAController.getEPICImageURL);
-
-// NEO (Near Earth Objects) routes
-router.get('/neo', NASAController.getNEOData);
-
-// NASA Image and Video Library routes
-router.get('/images', NASAController.searchNASAImages);
+// Mount individual route modules
+router.use('/apod', apodRoutes);
+router.use('/mars-rovers', marsRoverRoutes);
+router.use('/epic', epicRoutes);
+router.use('/neo', neoRoutes);
+router.use('/images', imageSearchRoutes);
 
 export default router; 

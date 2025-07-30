@@ -3,14 +3,13 @@ import helmet from 'helmet';
 import compression from 'compression';
 import morgan from 'morgan';
 import rateLimit from 'express-rate-limit';
-import dotenv from 'dotenv';
 
+import { config, isDevelopment } from './config/environment';
 import { corsMiddleware } from './middleware/cors';
 import { errorHandler, notFoundHandler } from './middleware/errorHandler';
+import { loggingMiddleware, morganFormat } from './middleware/logging';
 import nasaRoutes from './routes/nasaRoutes';
-
-// Load environment variables
-dotenv.config();
+import docsRoutes from './routes/docsRoutes';
 
 const app = express();
 
@@ -25,8 +24,8 @@ app.use(compression());
 
 // Rate limiting
 const limiter = rateLimit({
-  windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS || '900000'), // 15 minutes
-  max: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS || '100'), // limit each IP to 100 requests per windowMs
+  windowMs: config.RATE_LIMIT_WINDOW_MS,
+  max: config.RATE_LIMIT_MAX_REQUESTS,
   message: {
     error: 'TOO_MANY_REQUESTS',
     message: 'Too many requests from this IP, please try again later.',
@@ -40,8 +39,9 @@ const limiter = rateLimit({
 app.use(limiter);
 
 // Logging middleware
-if (process.env.NODE_ENV === 'development') {
-  app.use(morgan('dev'));
+app.use(loggingMiddleware);
+if (isDevelopment()) {
+  app.use(morganFormat);
 } else {
   app.use(morgan('combined'));
 }
@@ -62,6 +62,7 @@ app.get('/health', (req, res) => {
 
 // API routes
 app.use('/api/nasa', nasaRoutes);
+app.use('/api/docs', docsRoutes);
 
 // Root endpoint
 app.get('/', (req, res) => {
@@ -75,8 +76,16 @@ app.get('/', (req, res) => {
       epic: '/api/nasa/epic',
       neo: '/api/nasa/neo',
       images: '/api/nasa/images',
+      docs: '/api/docs',
     },
     documentation: 'https://api.nasa.gov/',
+    features: [
+      'Input validation',
+      'Response caching',
+      'Request logging',
+      'Rate limiting',
+      'API monitoring',
+    ],
   });
 });
 

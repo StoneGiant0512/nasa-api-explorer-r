@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { motion } from 'framer-motion'
 import { FaCalendar, FaExclamationTriangle, FaInfoCircle } from 'react-icons/fa'
-import { apiService } from '../services/api'
+import { neoService } from '../services/neoService'
 import LoadingSpinner from '../components/LoadingSpinner'
 import ErrorMessage from '../components/ErrorMessage'
 
@@ -12,16 +12,12 @@ const NEO = () => {
 
   const { data: neoData, isLoading, error, refetch } = useQuery({
     queryKey: ['neo', startDate, endDate],
-    queryFn: () => apiService.getNEOData({ start_date: startDate, end_date: endDate }),
+    queryFn: () => neoService.getNEOByDateRange(startDate, endDate),
     staleTime: 1000 * 60 * 30, // 30 minutes
   })
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
-    })
+    return neoService.getFormattedDate(dateString)
   }
 
   const getHazardLevel = (isHazardous: boolean) => {
