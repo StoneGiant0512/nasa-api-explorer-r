@@ -1,4 +1,4 @@
-# Deployment Guide
+# Deployment Guide - Simple Backend
 
 ## Prerequisites
 - GitHub repository with your code
@@ -22,9 +22,8 @@
 ### 3. Set Environment Variables
 Add these environment variables in Render:
 - `NODE_ENV`: `production`
-- `NASA_API_KEY`: Your NASA API key
+- `NASA_API_KEY`: Your NASA API key (get from https://api.nasa.gov/)
 - `CORS_ORIGIN`: Your Vercel frontend URL (set after frontend deployment)
-- `NASA_API_BASE_URL`: `https://api.nasa.gov`
 
 ### 4. Deploy
 Click "Create Web Service" and wait for deployment to complete.
@@ -73,4 +72,23 @@ After both deployments are complete:
 
 ### Environment Variables Reference
 
-**Backend (Render)**: 
+**Backend (Render)**:
+```
+NODE_ENV=production
+NASA_API_KEY=your_nasa_api_key
+CORS_ORIGIN=https://your-app.vercel.app
+```
+
+**Frontend (Vercel)**:
+```
+VITE_API_URL=https://your-backend-name.onrender.com
+```
+
+## Simple Backend Features
+
+✅ **TypeScript** - Type safety and better development experience
+✅ **Single file** - All endpoints in one `server.ts` file
+✅ **Easy deployment** - Simple build process
+✅ **All NASA APIs** - APOD, Mars Rovers, EPIC, NEO, Image Search
+✅ **Error handling** - Proper error responses
+✅ **CORS support** - Ready for frontend integration
